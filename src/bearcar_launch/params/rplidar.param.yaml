@@ -1,0 +1,8 @@
+/**:
+  ros__parameters:
+    serial_port: "/dev/USB_lidar"
+    serial_baudrate: 256000 
+    frame_id: lidar
+    inverted: false 
+    angle_compensate: true 
+    scan_mode: "Sensitivity" # also Boost or Stability

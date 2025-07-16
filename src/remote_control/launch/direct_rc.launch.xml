@@ -1,0 +1,5 @@
+<launch>
+  <node pkg="remote_control" exec="rc_publisher" name="rc" namespace="bearcar">
+    <param> 
+  </node>
+</launch>
