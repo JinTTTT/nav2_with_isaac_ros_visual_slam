@@ -56,7 +56,7 @@ def generate_launch_description():
             'speed_to_erpm_gain': 1900.0,
             'speed_to_erpm_offset': 0.0,
             'steering_angle_to_servo_gain': 0.567,    # Original parameters
-            'steering_angle_to_servo_offset': 0.5
+            'steering_angle_to_servo_offset': 0.4875  #added offset to counter left drift sweet spot should be around 0.485 - 0.49
         }],
         remappings=[
             ('vehicle_cmd_vel', 'vehicle_cmd_vel'),  # Receive data from rc_controller
