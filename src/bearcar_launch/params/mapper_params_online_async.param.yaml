@@ -12,8 +12,8 @@ slam_toolbox:
     # ROS Parameters
     odom_frame: odom
     map_frame: map
-    base_frame: base_link
-    scan_topic: /lidar/scan_filtered
+    base_frame: vehicle/base_link
+    scan_topic: /lidar/scan
     mode: mapping # localization
 
     # if you'd like to immediately start continuing a map at a given pose

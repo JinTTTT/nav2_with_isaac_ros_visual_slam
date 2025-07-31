@@ -29,6 +29,7 @@ setup(
             'rc_to_ackermann = remote_control.rc_to_ackermann:main',
             'rc_to_vehicle_command = remote_control.rc_to_vehicle_command:main',
             'simple_vesc_interface = remote_control.simple_vesc_interface:main',
+            'nav_cmd_publisher = remote_control.nav_cmd_publisher:main',
         ],
     },
 )
