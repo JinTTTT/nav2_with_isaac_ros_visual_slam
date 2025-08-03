@@ -10,8 +10,8 @@ amcl:
     scan_topic: "/scan"
     
     # Transform Settings
-    transform_tolerance: 0.1
-    set_initial_pose: false
+    transform_tolerance: 1.0
+    set_initial_pose: true
     always_reset_initial_pose: false
     
     # Particle Filter Settings
@@ -57,7 +57,7 @@ amcl:
 map_server:
   ros__parameters:
     use_sim_time: false
-    yaml_filename: "/home/jetsonagx/nav2_ws/my_bearcar_map_v2.yaml"
+    yaml_filename: "/home/jetsonagx/nav2_ws/lab_scan.yaml"
 
 lifecycle_manager:
   ros__parameters:

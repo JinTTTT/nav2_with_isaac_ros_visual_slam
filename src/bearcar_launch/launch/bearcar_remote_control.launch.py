@@ -33,18 +33,8 @@ def generate_launch_description():
         ]
     )
 
-    rc_controller = Node(  # Control logic processor
-        package='remote_control',
-        namespace='vehicle',
-        executable='rc_to_vehicle_command',
-        name='rc_to_vehicle_command',
-        output='screen',
-        parameters=[rc_param_file],
-        remappings=[
-            ('cmd_vel', 'rc_cmd_vel'),           # Subscribe to /vehicle/rc_cmd_vel
-            ('vehicle_cmd_vel', 'vehicle_cmd_vel'),  # Publish to /vehicle/vehicle_cmd_vel
-        ]
-    )
+    # rc_controller removed - unnecessary pass-through node
+    # simple_vesc_interface now directly subscribes to rc_cmd_vel
 
     simple_vesc_interface_node = Node(  # VESC protocol converter - replaces autoware's vesc_interface
         package='remote_control',
@@ -59,7 +49,7 @@ def generate_launch_description():
             'steering_angle_to_servo_offset': 0.4875  #added offset to counter left drift sweet spot should be around 0.485 - 0.49
         }],
         remappings=[
-            ('vehicle_cmd_vel', 'vehicle_cmd_vel'),  # Receive data from rc_controller
+            ('vehicle_cmd_vel', 'rc_cmd_vel'),  # Receive data directly from rc_publisher
             ('commands/motor/speed', 'commands/motor/speed'),      # Publish to vehicle namespace
             ('commands/servo/position', 'commands/servo/position') # Publish to vehicle namespace
         ]
@@ -80,7 +70,6 @@ def generate_launch_description():
 
     return LaunchDescription([
         rc_publisher,
-        rc_controller, 
         simple_vesc_interface_node,
         vesc_driver_node,
     ])
