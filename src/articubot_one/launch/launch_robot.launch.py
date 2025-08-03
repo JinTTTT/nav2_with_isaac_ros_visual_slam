@@ -26,20 +26,22 @@ def generate_launch_description():
     rc_param_file = os.path.join(bearcar_package_dir, 'params', 'remote_control.param.yaml')
     vesc_param_file = os.path.join(bearcar_package_dir, 'params', 'vesc.param.yaml')
 
-    # Navigation command converter (replaces rc_publisher for autonomous mode)
-    nav_cmd_publisher = Node(  # Convert navigation cmd_vel to RC format
+    # Ackermann conversion node (converts Nav2 angular velocity to steering angle)
+    cmd_vel_to_ackermann = Node(
         package='remote_control',
         namespace='vehicle',
-        executable='nav_cmd_publisher',  # New node to be created
-        name='nav_cmd_publisher',
+        executable='cmd_vel_to_ackermann',
+        name='cmd_vel_to_ackermann',
         output='screen',
         parameters=[{
-            'max_linear_vel': 1.0,   # Max linear velocity in m/s to map to ±1.0
-            'max_angular_vel': 1.0,  # Max angular velocity in rad/s to map to ±0.5
+            'wheelbase': 0.3175,           # Bearcar wheelbase in meters
+            'min_velocity': 0.01,          # Minimum velocity to avoid division by zero
+            'max_steering_angle': 0.5,     # Max steering angle in radians (~28.6°)
+            'debug': True,                 # Enable debug output
         }],
         remappings=[
-            ('nav_cmd_vel', '/cmd_vel'),        # Subscribe to navigation cmd_vel
-            ('cmd_vel', 'rc_cmd_vel'),          # Publish to /vehicle/rc_cmd_vel (same as rc_publisher)
+            ('nav_cmd_vel', '/cmd_vel'),            # Subscribe to Nav2 cmd_vel
+            ('ackermann_cmd_vel', 'ackermann_cmd_vel'),  # Publish converted cmd_vel
         ]
     )
 
@@ -69,7 +71,7 @@ def generate_launch_description():
             'steering_angle_to_servo_offset': 0.4875  #added offset to counter left drift sweet spot should be around 0.485 - 0.49
         }],
         remappings=[
-            ('vehicle_cmd_vel', '/cmd_vel'),  # Receive data directly from navigation
+            ('vehicle_cmd_vel', 'ackermann_cmd_vel'),  # Receive converted cmd_vel from ackermann node
             ('commands/motor/speed', 'commands/motor/speed'),      # Publish to vehicle namespace
             ('commands/servo/position', 'commands/servo/position') # Publish to vehicle namespace
         ]
@@ -91,12 +93,11 @@ def generate_launch_description():
     # Launch them all!
     return LaunchDescription([
         rsp, # Robot State Publisher
-        # nav_cmd_publisher, # Not needed - simple_vesc_interface handles cmd_vel directly
-
-        # control nodes
-        # rc_controller, # Not needed for navigation mode
-        simple_vesc_interface_node,
-        vesc_driver_node,
+        
+        # Ackermann conversion pipeline
+        cmd_vel_to_ackermann,      # Convert Nav2 angular velocity to steering angle
+        simple_vesc_interface_node, # Convert steering angle to VESC commands
+        vesc_driver_node,          # VESC hardware driver
     ])
 
 

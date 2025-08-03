@@ -1,5 +1,5 @@
 # Remote Controller
-This package receive remote control commands from Arduino and publish it as Twist messages.
+This package handles remote control commands and navigation command conversion for Ackermann steering vehicles.
 
 Data Transmission through the serial port is a string line:
 

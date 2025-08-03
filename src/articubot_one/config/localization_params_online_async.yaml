@@ -17,7 +17,7 @@ slam_toolbox:
     mode: localization  # Changed from mapping to localization
 
     # Load existing map for localization
-    map_file_name: /home/jetsonagx/nav2_ws/my_map
+    map_file_name: /home/jetsonagx/nav2_ws/lab_scan
     # map_start_pose: [0.0, 0.0, 0.0]  # Optional: specify initial pose
     map_start_at_dock: false
 
