@@ -14,6 +14,7 @@ slam_toolbox:
     map_frame: map
     base_frame: base_link
     scan_topic: /scan
+    odom_topic: /visual_slam/tracking/odometry  # Use Visual SLAM odometry
     mode: localization  # Changed from mapping to localization
 
     # Load existing map for localization
@@ -23,12 +24,12 @@ slam_toolbox:
 
     debug_logging: false
     throttle_scans: 1
-    transform_publish_period: 0.05 #if 0 never publishes odometry (20Hz instead of 50Hz)
+    transform_publish_period: 0.024 #Match Visual SLAM frequency (42Hz)
     map_update_interval: 1.0
     resolution: 0.05  # Match your map resolution
     max_laser_range: 16.0 #for rastering images
-    minimum_time_interval: 0.1  # Faster for localization
-    transform_timeout: 0.1
+    minimum_time_interval: 0.05  # Faster for localization
+    transform_timeout: 0.2  # Increased tolerance for tf lookup
     tf_buffer_duration: 10.0
     stack_size_to_use: 40000000
     enable_interactive_mode: true
