@@ -1,12 +1,54 @@
 # ROS2 Navigation Robot Project
 
-A complete 2D LiDAR mapping, localization, and navigation system based on ROS2 Nav2.
+A complete 2D LiDAR mapping, Isaac Vslam localization, and navigation system based on ROS2 Nav2.
 
 ## Hardware Components
 
 - **LiDAR**: RPLidar (2D laser scanning)
-- **Odometry**: RF2O laser odometry
-- **Robot Platform**: Articubot One with VESC motor controller
+- **Robot Platform**: VESC motor controller
+- **Odometry**: Visual slam, topic name: _/visual_slam/tracking/odometry_
+- **Navigation**: Nav2
+
+## Control Logic
+
+The system supports dual control modes with automatic priority switching between autonomous navigation and manual remote control:
+
+### Data Flow Architecture
+```
+Nav2 → /cmd_vel → cmd_vel_to_ackermann → /vehicle/ackermann_cmd_vel ↘
+                                                                     ↘
+                                                                     twist_mux → /cmd_vel_out → simple_vesc_interface → VESC
+Remote Controller → /vehicle/rc_cmd_vel ─────────────────────────────↗
+```
+
+### Control Components
+
+1. **Nav2 Path**: Autonomous navigation commands
+   - Nav2 publishes angular velocity (`/cmd_vel`)
+   - `cmd_vel_to_ackermann` converts angular velocity to steering angle using Ackermann geometry
+   - Output: `/vehicle/ackermann_cmd_vel` with steering angle format
+
+2. **Remote Control Path**: Manual joystick control
+   - `rc_publisher` reads joystick PWM signals and converts to steering angles
+   - Includes deadzone filtering to eliminate noise (±0.02 m/s, ±0.02 rad)
+   - Output: `/vehicle/rc_cmd_vel` with steering angle format
+
+3. **Twist Multiplexer**: Priority-based input selection
+   - **Remote Control Priority**: 100 (highest)
+   - **Navigation Priority**: 10 (lower)
+   - **Timeout**: 0.5 seconds for automatic switching
+   - **Behavior**: Remote control overrides Nav2 when active; switches back to Nav2 when joystick idle
+
+4. **VESC Interface**: Hardware command conversion
+   - Converts unified cmd_vel to VESC motor commands
+   - Speed: m/s → ERPM conversion
+   - Steering: rad → servo position (0.0-1.0)
+
+### Control Modes
+
+- **Autonomous Mode**: Nav2 provides navigation commands, robot follows planned paths
+- **Manual Override**: Joystick input immediately takes control, Nav2 commands ignored
+- **Automatic Recovery**: System returns to Nav2 control 0.5s after joystick becomes idle
 
 ## Quick Start
 
@@ -16,13 +58,30 @@ ros2 launch articubot_one launch_robot.launch.py
 ```
 Starts robot state publisher and motor control interface.
 
-### 2. Launch LiDAR and Odometry
+### 2. Launch LiDAR
 ```bash
-ros2 launch articubot_one launch_lidar_odom.launch.py
+ros2 launch articubot_one launch_lidar_only.launch.py 
 ```
 Starts RPLidar node and RF2O laser odometry.
 
-## Mapping Mode
+### 3. Launch Isaac Vslam for Odometry
+
+- go to isaac container
+```bash
+docker start -ai isaac_ros_dev-aarch64-container 
+```
+
+- source
+```bash
+soure install/setup.bash
+```
+
+- start vslam
+```bash
+ros2 launch isaac_ros_visual_slam isaac_ros_visual_slam_realsense.launch.py
+```
+
+## Mapping Mode *
 
 ### 3. Launch Mapping
 ```bash
@@ -45,22 +104,24 @@ ros2 service call /slam_toolbox/serialize_map slam_toolbox/srv/SerializePoseGrap
 ## Navigation Mode
 
 ### 3. Launch Localization
+Starts SLAM Toolbox localization with pre-built map. 
+
+Purpose is to use scanned info compare with the pre-built map, calculate the transform of map - odom
 ```bash
 ros2 launch articubot_one launch_localization.launch.py
 ```
-Starts SLAM Toolbox localization with pre-built map.
 
 **Alternative: AMCL Localization**
+Uses standard format map with AMCL algorithm.
 ```bash
 ros2 launch articubot_one launch_amcl_localization.launch.py
 ```
-Uses standard format map with AMCL algorithm.
 
 ### 4. Launch Navigation
+Starts Nav2 navigation stack.
 ```bash
 ros2 launch articubot_one navigation_launch.py
 ```
-Starts Nav2 navigation stack.
 
 ### 5. Set Navigation Goal
 - Open RViz2
@@ -105,5 +166,4 @@ src/
 
 - Ensure LiDAR is properly connected and configured
 - Drive robot around sufficiently during mapping for complete coverage
-- Set initial pose estimate in RViz before navigation
-- Choose localization method based on specific requirements
+- Set initial pose estimate in RViz before navigation * _only for amcl localization *

@@ -19,6 +19,10 @@
     speed_init_thres: 0.05  # When init, cmd value should be within this threshold for several seconds 
     steer_init_thres: 0.05
     
+    # Deadzone parameters to filter noise - values below these thresholds won't be published
+    speed_deadzone: 0.02  # m/s - ignore linear velocity below 2cm/s
+    steer_deadzone: 0.02  # rad - ignore angular velocity below ~1.2 degrees
+    
     speed_max: 1.5 # m/s 5
     speed_min: -1.5 # m/s 5 
     steer_max: 0.8 # rad 

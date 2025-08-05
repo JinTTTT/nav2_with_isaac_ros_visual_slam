@@ -65,8 +65,11 @@ class CmdVelToAckermann(Node):
         
         # Convert angular velocity to steering angle
         if abs(nav_msg.linear.x) < self.min_velocity:
-            # If velocity is too low, set steering to zero to avoid division by zero
-            ackermann_msg.angular.z = 0.0
+            # For low/zero velocity, use angular velocity directly as steering angle
+            # This allows for turning in place or at very low speeds
+            angular_velocity = nav_msg.angular.z
+            ackermann_msg.angular.z = max(-self.max_steering_angle, 
+                                        min(self.max_steering_angle, angular_velocity))
         else:
             # Apply Ackermann steering formula
             # steering_angle = atan(angular_velocity * wheelbase / linear_velocity)

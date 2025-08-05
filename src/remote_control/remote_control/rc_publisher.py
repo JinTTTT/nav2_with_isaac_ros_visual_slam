@@ -1,10 +1,7 @@
 #!/usr/bin/python3
-from matplotlib.lines import Line2D
-from plumbum import local
 import rclpy
 from rclpy.node import Node
 import serial
-from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 
 class RemoteControlPublisher(Node):
@@ -41,6 +38,8 @@ class RemoteControlPublisher(Node):
                 ('speed_init_thres', None),
                 ('steer_init_thres', None),
                 ('freeze_check_times', None),
+                ('speed_deadzone', None),
+                ('steer_deadzone', None),
                 ('debug', None),
             ]
         )
@@ -65,6 +64,9 @@ class RemoteControlPublisher(Node):
         self.steer_init = self.get_parameter('steer_init').value
         self.speed_init_thres = self.get_parameter('speed_init_thres').value
         self.steer_init_thres = self.get_parameter('steer_init_thres').value
+        
+        self.speed_deadzone = self.get_parameter('speed_deadzone').value
+        self.steer_deadzone = self.get_parameter('steer_deadzone').value
         
         self.debug = self.get_parameter('debug').value
 
@@ -203,15 +205,18 @@ class RemoteControlPublisher(Node):
     
     def publish_callback(self):
         """
-        Publish callback function to publish data as Twist if data is accepted.
+        Publish callback function to publish data as Twist if data is accepted and significant.
         """
         if self.is_data_accepted: # Serial input is valid drive command string
-            self.check_and_save_cmd_value()  # cmd is not in safe range, stop the car
-
-            self.publish_cmd()
-
-            if self.debug:
-                self.get_logger().info('Publishing speed: %.3f, steer: %.3f' %(self.drive_cmd["speed"], self.drive_cmd["steer"]) )
+            if self.check_and_save_cmd_value():  # cmd is in safe range
+                # Only publish if movement is above deadzone threshold
+                if self.has_significant_movement(self.drive_cmd["speed"], self.drive_cmd["steer"]):
+                    self.publish_cmd()
+                    if self.debug:
+                        self.get_logger().info('Publishing speed: %.3f, steer: %.3f' %(self.drive_cmd["speed"], self.drive_cmd["steer"]) )
+                elif self.debug:
+                    self.get_logger().info('Movement below deadzone - not publishing: speed: %.3f, steer: %.3f' %(self.drive_cmd["speed"], self.drive_cmd["steer"]) )
+        # 如果没有有效数据或动作太小，不发布任何消息，让twist_mux超时切换到Nav2
             
     def stop_car(self):
         """
@@ -221,6 +226,15 @@ class RemoteControlPublisher(Node):
         self.drive_cmd["speed"] = self.speed_init
         self.publish_cmd()
     
+    def has_significant_movement(self, speed, steer):
+        """
+        Check if the movement is significant enough to publish (above deadzone)
+        :param speed: speed in m/s
+        :param steer: steering in rad
+        :return: True if movement is above deadzone thresholds
+        """
+        return abs(speed) > self.speed_deadzone or abs(steer) > self.steer_deadzone
+
     def convert_data(self, pwm_speed, pwm_steer):
         """
         convert the speed and steering from pwm value to (m/s) and (rad)

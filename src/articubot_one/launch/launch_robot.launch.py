@@ -25,6 +25,7 @@ def generate_launch_description():
     # Parameter files
     rc_param_file = os.path.join(bearcar_package_dir, 'params', 'remote_control.param.yaml')
     vesc_param_file = os.path.join(bearcar_package_dir, 'params', 'vesc.param.yaml')
+    twist_mux_params = os.path.join(get_package_share_directory(rsp_package), 'config', 'twist_mux.yaml')
 
     # Ackermann conversion node (converts Nav2 angular velocity to steering angle)
     cmd_vel_to_ackermann = Node(
@@ -40,23 +41,11 @@ def generate_launch_description():
             'debug': True,                 # Enable debug output
         }],
         remappings=[
-            ('nav_cmd_vel', '/cmd_vel'),            # Subscribe to Nav2 cmd_vel
-            ('ackermann_cmd_vel', 'ackermann_cmd_vel'),  # Publish converted cmd_vel
+            ('nav_cmd_vel', '/cmd_vel'),                # Subscribe to Nav2 cmd_vel directly
+            ('ackermann_cmd_vel', 'ackermann_cmd_vel'),  # Publish to twist_mux navigation input
         ]
     )
 
-    rc_controller = Node(  # Control logic processor
-        package='remote_control',
-        namespace='vehicle',
-        executable='rc_to_vehicle_command',
-        name='rc_to_vehicle_command',
-        output='screen',
-        parameters=[rc_param_file],
-        remappings=[
-            ('cmd_vel', 'rc_cmd_vel'),           # Subscribe to /vehicle/rc_cmd_vel
-            ('vehicle_cmd_vel', 'vehicle_cmd_vel'),  # Publish to /vehicle/vehicle_cmd_vel
-        ]
-    )
 
     simple_vesc_interface_node = Node(  # VESC protocol converter - replaces autoware's vesc_interface
         package='remote_control',
@@ -71,9 +60,34 @@ def generate_launch_description():
             'steering_angle_to_servo_offset': 0.4875  #added offset to counter left drift sweet spot should be around 0.485 - 0.49
         }],
         remappings=[
-            ('vehicle_cmd_vel', 'ackermann_cmd_vel'),  # Receive converted cmd_vel from ackermann node
+            ('vehicle_cmd_vel', '/cmd_vel_out'),  # Receive directly from twist_mux
             ('commands/motor/speed', 'commands/motor/speed'),      # Publish to vehicle namespace
             ('commands/servo/position', 'commands/servo/position') # Publish to vehicle namespace
+        ]
+    )
+
+    # Twist Multiplexer - handles Nav2 and joystick cmd_vel inputs
+    twist_mux_node = Node(
+        package='twist_mux',
+        executable='twist_mux',
+        name='twist_mux',
+        output='screen',
+        parameters=[twist_mux_params],
+        remappings=[
+            ('cmd_vel_out', '/cmd_vel_out'),  # Output to ackermann converter
+        ]
+    )
+
+    # Remote controller signal receiver
+    rc_publisher = Node(
+        package='remote_control',
+        namespace='vehicle',
+        executable='rc_publisher',
+        name='rc_publisher',
+        output='screen',
+        parameters=[rc_param_file],
+        remappings=[
+            ('cmd_vel', 'rc_cmd_vel'),  # Publish to /vehicle/rc_cmd_vel for twist_mux
         ]
     )
 
@@ -94,8 +108,12 @@ def generate_launch_description():
     return LaunchDescription([
         rsp, # Robot State Publisher
         
+        # Control input sources
+        rc_publisher,              # Remote controller input
+        twist_mux_node,            # Multiplexer for Nav2 and joystick inputs
+        
         # Ackermann conversion pipeline
-        cmd_vel_to_ackermann,      # Convert Nav2 angular velocity to steering angle
+        cmd_vel_to_ackermann,      # Convert multiplexed cmd_vel to steering angle
         simple_vesc_interface_node, # Convert steering angle to VESC commands
         vesc_driver_node,          # VESC hardware driver
     ])
