@@ -55,7 +55,7 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'speed_to_erpm_gain': 1900.0,
-            'speed_to_erpm_offset': 160.0,  # Added 200 offset for navigation mode to ensure minimum speed
+            'speed_to_erpm_offset': 200.0,  # Added 200 offset for navigation mode to ensure minimum speed
             'steering_angle_to_servo_gain': 0.567,    # Original parameters
             'steering_angle_to_servo_offset': 0.4875  #added offset to counter left drift sweet spot should be around 0.485 - 0.49
         }],

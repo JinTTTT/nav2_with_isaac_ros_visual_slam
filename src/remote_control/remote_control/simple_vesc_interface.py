@@ -35,7 +35,17 @@ class SimpleVescInterface(Node):
     def cmd_callback(self, msg):
         # Speed conversion: m/s -> ERPM
         speed_msg = Float64()
-        speed_msg.data = self.speed_gain * msg.linear.x + self.speed_offset
+        
+        # Handle forward and backward motion separately
+        if msg.linear.x > 0:
+            # Forward motion: apply positive offset
+            speed_msg.data = self.speed_gain * msg.linear.x + self.speed_offset
+        elif msg.linear.x < 0:
+            # Backward motion: apply negative offset  
+            speed_msg.data = self.speed_gain * msg.linear.x - self.speed_offset
+        else:
+            # Zero velocity
+            speed_msg.data = 0.0
         
         # Steering conversion: rad -> servo position (0.0-1.0)
         servo_msg = Float64() 
