@@ -93,12 +93,12 @@ Starts SLAM Toolbox for real-time mapping. Drive the robot around to build the m
 
 **Standard format map (for AMCL):**
 ```bash
-ros2 run nav2_map_server map_saver_cli -f /home/jetsonagx/nav2_ws/my_map_name
+ros2 run nav2_map_server map_saver_cli -f /home/jetsonagx/nav2_ws/lab_scan
 ```
 
 **SLAM Toolbox serialized map (for SLAM localization):**
 ```bash
-ros2 service call /slam_toolbox/serialize_map slam_toolbox/srv/SerializePoseGraph "{filename: '/home/jetsonagx/nav2_ws/my_map_name'}"
+ros2 service call /slam_toolbox/serialize_map slam_toolbox/srv/SerializePoseGraph "{filename: '/home/jetsonagx/nav2_ws/lab_scan'}"
 ```
 
 ## Navigation Mode
