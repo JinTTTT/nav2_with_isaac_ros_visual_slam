@@ -125,7 +125,7 @@ controller_server:
       max_allowed_time_to_collision_up_to_carrot: 1.0
       use_regulated_linear_velocity_scaling: true
       use_cost_regulated_linear_velocity_scaling: true
-      regulated_linear_scaling_min_radius: 0.5
+      regulated_linear_scaling_min_radius: 0.7
       regulated_linear_scaling_min_speed: 0.2  # Increased from 0.2 to 0.3
       use_rotate_to_heading: false  # Ackerman车辆不能原地转向
       allow_reversing: true
@@ -251,7 +251,7 @@ planner_server:
       max_iterations: 500000  # Reduced for better performance
       max_on_approach_iterations: 1000
       max_planning_time: 1.0  # Reduced for better performance
-      minimum_turning_radius: 0.8  # 匹配实际最小转向半径
+      minimum_turning_radius: 0.7  # 匹配实际最小转向半径
       analytic_expansion_ratio: 3.5
       analytic_expansion_max_length: 3.0
       cost_penalty: 20.0
