@@ -13,12 +13,12 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
     
     # Package paths
-    package_name = 'bearcar_launch'
+    package_name = 'articubot_one'
     package_dir = get_package_share_directory(package_name)
     
     # Parameter files
-    rc_param_file = os.path.join(package_dir, 'params', 'remote_control.param.yaml')
-    vesc_param_file = os.path.join(package_dir, 'params', 'vesc.param.yaml')
+    rc_param_file = os.path.join(package_dir, 'config', 'remote_control.param.yaml')
+    vesc_param_file = os.path.join(package_dir, 'config', 'vesc.param.yaml')
 
     # Core nodes for remote control system
     rc_publisher = Node(  # Remote controller signal receiver
