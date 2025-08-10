@@ -13,14 +13,14 @@ def generate_launch_description():
     # Include RPLidar launch
     rplidar = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('articubot_one'),'launch','rplidar.launch.py'
+            get_package_share_directory('bearcar_nav2_launch'),'launch','rplidar.launch.py'
         )])
     )
 
     # Include Robot State Publisher launch (Optional - usually started by main robot launch)
     # rsp = IncludeLaunchDescription(
     #     PythonLaunchDescriptionSource([os.path.join(
-    #         get_package_share_directory('articubot_one'),'launch','rsp.launch.py'
+    #         get_package_share_directory('bearcar_nav2_launch'),'launch','rsp.launch.py'
     #     )])
     # )
 

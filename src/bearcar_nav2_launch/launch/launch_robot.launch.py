@@ -11,8 +11,8 @@ def generate_launch_description():
 
 
     # Package paths
-    rsp_package = 'articubot_one'
-    bearcar_package = 'bearcar_launch'
+    rsp_package = 'bearcar_nav2_launch'
+    bearcar_package = 'bearcar_nav2_launch'
     bearcar_package_dir = get_package_share_directory(bearcar_package)
 
     # Robot State Publisher
@@ -23,8 +23,8 @@ def generate_launch_description():
     )
     
     # Parameter files
-    rc_param_file = os.path.join(bearcar_package_dir, 'params', 'remote_control.param.yaml')
-    vesc_param_file = os.path.join(bearcar_package_dir, 'params', 'vesc.param.yaml')
+    rc_param_file = os.path.join(bearcar_package_dir, 'config', 'remote_control.param.yaml')
+    vesc_param_file = os.path.join(bearcar_package_dir, 'config', 'vesc.param.yaml')
     twist_mux_params = os.path.join(get_package_share_directory(rsp_package), 'config', 'twist_mux.yaml')
 
     # Ackermann conversion node (converts Nav2 angular velocity to steering angle)

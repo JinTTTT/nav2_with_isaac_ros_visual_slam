@@ -20,7 +20,7 @@ def generate_launch_description():
 
     # Variables
     lifecycle_nodes = ['map_saver']
-    bringup_dir = get_package_share_directory('articubot_one')
+    bringup_dir = get_package_share_directory('bearcar_nav2_launch')
 
     # Create our own temporary YAML files that include substitutions
     param_substitutions = {
@@ -55,7 +55,7 @@ def generate_launch_description():
     # Include SLAM Toolbox launch
     slam_toolbox = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('articubot_one'),'launch','online_async_launch.py'
+            get_package_share_directory('bearcar_nav2_launch'),'launch','online_async_launch.py'
         )]),
         launch_arguments={
             'use_sim_time': use_sim_time,

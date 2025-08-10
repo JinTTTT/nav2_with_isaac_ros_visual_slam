@@ -54,13 +54,13 @@ Remote Controller → /vehicle/rc_cmd_vel ────────────�
 
 ### 1. Launch Robot Base System
 ```bash
-ros2 launch articubot_one launch_robot.launch.py
+ros2 launch bearcar_nav2_launch launch_robot.launch.py
 ```
 Starts robot state publisher and motor control interface.
 
 ### 2. Launch LiDAR
 ```bash
-ros2 launch articubot_one launch_lidar_only.launch.py 
+ros2 launch bearcar_nav2_launch launch_lidar_only.launch.py 
 ```
 Starts RPLidar node and RF2O laser odometry.
 
@@ -85,7 +85,7 @@ ros2 launch isaac_ros_visual_slam isaac_ros_visual_slam_realsense.launch.py
 
 ### 3. Launch Mapping
 ```bash
-ros2 launch articubot_one launch_mapping.launch.py
+ros2 launch bearcar_nav2_launch launch_mapping.launch.py
 ```
 Starts SLAM Toolbox for real-time mapping. Drive the robot around to build the map.
 
@@ -108,19 +108,19 @@ Starts SLAM Toolbox localization with pre-built map.
 
 Purpose is to use scanned info compare with the pre-built map, calculate the transform of map - odom
 ```bash
-ros2 launch articubot_one launch_localization.launch.py
+ros2 launch bearcar_nav2_launch launch_localization.launch.py
 ```
 
 **Alternative: AMCL Localization**
 Uses standard format map with AMCL algorithm.
 ```bash
-ros2 launch articubot_one launch_amcl_localization.launch.py
+ros2 launch bearcar_nav2_launch launch_amcl_localization.launch.py
 ```
 
 ### 4. Launch Navigation
 Starts Nav2 navigation stack.
 ```bash
-ros2 launch articubot_one navigation_launch.py
+ros2 launch bearcar_nav2_launch navigation_launch.py
 ```
 
 ### 5. Set Navigation Goal
@@ -140,7 +140,7 @@ ros2 launch articubot_one navigation_launch.py
 
 ```
 src/
-├── articubot_one/           # Main robot package
+├── bearcar_nav2_launch/           # Main robot package
 │   ├── launch/             # Launch files
 │   ├── config/             # Configuration parameters
 │   └── description/        # Robot URDF description

@@ -15,7 +15,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
 
     # Package directory
-    bringup_dir = get_package_share_directory('articubot_one')
+    bringup_dir = get_package_share_directory('bearcar_nav2_launch')
 
     # Declare the launch arguments
     declare_params_file_cmd = DeclareLaunchArgument(
@@ -31,7 +31,7 @@ def generate_launch_description():
     # Include SLAM Toolbox in localization mode
     slam_localization = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('articubot_one'),'launch','online_async_launch.py'
+            get_package_share_directory('bearcar_nav2_launch'),'launch','online_async_launch.py'
         )]),
         launch_arguments={
             'use_sim_time': use_sim_time,

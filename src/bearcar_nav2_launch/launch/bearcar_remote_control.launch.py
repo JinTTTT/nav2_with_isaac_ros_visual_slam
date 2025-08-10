@@ -13,7 +13,7 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
     
     # Package paths
-    package_name = 'articubot_one'
+    package_name = 'bearcar_nav2_launch'
     package_dir = get_package_share_directory(package_name)
     
     # Parameter files
