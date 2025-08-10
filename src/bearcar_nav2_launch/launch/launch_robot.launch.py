@@ -35,7 +35,7 @@ def generate_launch_description():
         name='cmd_vel_to_ackermann',
         output='screen',
         parameters=[{
-            'wheelbase': 0.3175,           # Bearcar wheelbase in meters
+            'wheelbase': 0.285,            # Bearcar wheelbase in meters (actual measured)
             'min_velocity': 0.01,          # Minimum velocity to avoid division by zero
             'max_steering_angle': 0.5,     # Max steering angle in radians (~28.6°)
             'debug': True,                 # Enable debug output

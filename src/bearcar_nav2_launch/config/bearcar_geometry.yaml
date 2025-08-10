@@ -1,0 +1,89 @@
+# Bearcar Robot Geometry Parameters
+# All measurements in meters (converted from mm)
+# Measured on: 2025-08-10
+
+# ========================================
+# CHASSIS DIMENSIONS
+# ========================================
+chassis:
+  length: 0.405     # 405mm - total length from front to back
+  width: 0.262      # 262mm - total width 
+  height: 0.255     # 255mm - total height from ground
+  
+# ========================================  
+# WHEEL PARAMETERS
+# ========================================
+wheels:
+  # Wheel geometry
+  radius: 0.060     # 60mm - wheel radius
+  thickness: 0.060  # 60mm - wheel width/thickness
+  
+  # Wheel positioning
+  wheelbase: 0.285  # 285mm - distance between front and rear axle centers
+  track_width: 0.235 # 235mm - distance between left and right wheel centers
+  
+# ========================================
+# KINEMATIC PARAMETERS  
+# ========================================
+kinematics:
+  min_turning_radius: 0.730  # 730mm - minimum turning radius
+  
+# ========================================
+# SENSOR POSITIONING
+# ========================================
+sensors:
+  lidar:
+    # Position relative to chassis center (meters)
+    x_offset: 0.000     # 0mm - centered front-to-back
+    y_offset: 0.000     # 0mm - centered left-to-right  
+    z_height: 0.270     # 270mm - height above ground
+    
+    # Position relative to base_link for URDF (chassis joint offset considered)
+    # base_link is at wheel axle level, chassis is offset
+    relative_to_chassis:
+      x: 0.000          # Centered on chassis
+      y: 0.000          # Centered on chassis
+      z: 0.015          # 270mm ground - 255mm chassis_height = 15mm above chassis top
+
+# ========================================
+# DERIVED PARAMETERS FOR NAV2
+# ========================================
+navigation:
+  # Robot footprint - rectangular approximation with safety margin
+  # Format: [front_left, front_right, rear_right, rear_left]
+  # Adding 2cm safety margin on all sides
+  footprint_corners:
+    - [-0.2225, -0.141]  # rear left:  -(405/2 + 20)/1000, -(262/2 + 20)/1000
+    - [0.2225, -0.141]   # rear right:  (405/2 + 20)/1000, -(262/2 + 20)/1000  
+    - [0.2225, 0.141]    # front right: (405/2 + 20)/1000,  (262/2 + 20)/1000
+    - [-0.2225, 0.141]   # front left: -(405/2 + 20)/1000,  (262/2 + 20)/1000
+    
+  # Alternative circular approximation (radius of circumscribed circle + margin)
+  robot_radius: 0.263  # sqrt((405/2)^2 + (262/2)^2)/1000 + 0.02 safety margin
+  
+  # Inflation radius for costmap (typically 2-3x robot size for safety)
+  inflation_radius: 0.8  # Conservative 80cm inflation
+  
+# ========================================
+# ORIGINAL MEASUREMENTS (mm)  
+# ========================================
+original_measurements_mm:
+  length: 405
+  width: 262  
+  height: 255
+  wheelbase: 285
+  track_width: 235
+  wheel_radius: 60
+  wheel_thickness: 60
+  min_turning_radius: 730
+  lidar_height: 270
+  lidar_x_offset: 0
+  lidar_y_offset: 0
+  
+# ========================================  
+# NOTES
+# ========================================
+# - All parameters converted to meters for ROS2 compatibility
+# - Footprint includes 2cm safety margin on all sides
+# - LiDAR position still needs to be measured and added
+# - Mass parameters needed for simulation (if used)

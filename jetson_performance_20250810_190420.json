@@ -1,0 +1,234 @@
+{
+  "metadata": {
+    "collection_time": "2025-08-10T19:04:20.493394",
+    "interval": 1.0,
+    "data_points": 5
+  },
+  "data": [
+    {
+      "timestamp": "08-10-2025 19:04:16",
+      "ram_used_mb": 3257,
+      "ram_total_mb": 31011,
+      "ram_usage_percent": 10.502724839573055,
+      "cpu_cores": [
+        {
+          "usage": 41,
+          "freq": 2265
+        },
+        {
+          "usage": 20,
+          "freq": 2265
+        },
+        {
+          "usage": 28,
+          "freq": 2265
+        },
+        {
+          "usage": 18,
+          "freq": 2265
+        },
+        {
+          "usage": 40,
+          "freq": 2265
+        },
+        {
+          "usage": 34,
+          "freq": 2265
+        },
+        {
+          "usage": 23,
+          "freq": 2265
+        },
+        {
+          "usage": 9,
+          "freq": 2265
+        }
+      ],
+      "cpu_avg_usage": 26.625,
+      "cpu_avg_freq": 2265.0,
+      "gpu_usage": 0,
+      "cpu_temp": 50.5,
+      "gpu_temp": 50.5
+    },
+    {
+      "timestamp": "08-10-2025 19:04:17",
+      "ram_used_mb": 3253,
+      "ram_total_mb": 31011,
+      "ram_usage_percent": 10.489826190706523,
+      "cpu_cores": [
+        {
+          "usage": 7,
+          "freq": 2265
+        },
+        {
+          "usage": 52,
+          "freq": 2265
+        },
+        {
+          "usage": 12,
+          "freq": 2265
+        },
+        {
+          "usage": 14,
+          "freq": 2265
+        },
+        {
+          "usage": 7,
+          "freq": 2265
+        },
+        {
+          "usage": 24,
+          "freq": 2265
+        },
+        {
+          "usage": 17,
+          "freq": 2265
+        },
+        {
+          "usage": 30,
+          "freq": 2265
+        }
+      ],
+      "cpu_avg_usage": 20.375,
+      "cpu_avg_freq": 2265.0,
+      "gpu_usage": 0,
+      "cpu_temp": 50.0,
+      "gpu_temp": 50.0
+    },
+    {
+      "timestamp": "08-10-2025 19:04:18",
+      "ram_used_mb": 3252,
+      "ram_total_mb": 31011,
+      "ram_usage_percent": 10.48660152848989,
+      "cpu_cores": [
+        {
+          "usage": 6,
+          "freq": 1190
+        },
+        {
+          "usage": 8,
+          "freq": 1190
+        },
+        {
+          "usage": 8,
+          "freq": 1190
+        },
+        {
+          "usage": 4,
+          "freq": 1190
+        },
+        {
+          "usage": 4,
+          "freq": 1190
+        },
+        {
+          "usage": 1,
+          "freq": 1190
+        },
+        {
+          "usage": 4,
+          "freq": 1190
+        },
+        {
+          "usage": 35,
+          "freq": 1497
+        }
+      ],
+      "cpu_avg_usage": 8.75,
+      "cpu_avg_freq": 1228.375,
+      "gpu_usage": 0,
+      "cpu_temp": 49.0,
+      "gpu_temp": 49.0
+    },
+    {
+      "timestamp": "08-10-2025 19:04:19",
+      "ram_used_mb": 3251,
+      "ram_total_mb": 31011,
+      "ram_usage_percent": 10.48337686627326,
+      "cpu_cores": [
+        {
+          "usage": 3,
+          "freq": 1267
+        },
+        {
+          "usage": 2,
+          "freq": 1267
+        },
+        {
+          "usage": 6,
+          "freq": 1267
+        },
+        {
+          "usage": 2,
+          "freq": 1267
+        },
+        {
+          "usage": 0,
+          "freq": 1267
+        },
+        {
+          "usage": 3,
+          "freq": 1267
+        },
+        {
+          "usage": 42,
+          "freq": 1267
+        },
+        {
+          "usage": 2,
+          "freq": 1267
+        }
+      ],
+      "cpu_avg_usage": 7.5,
+      "cpu_avg_freq": 1267.0,
+      "gpu_usage": 0,
+      "cpu_temp": 49.0,
+      "gpu_temp": 49.0
+    },
+    {
+      "timestamp": "08-10-2025 19:04:20",
+      "ram_used_mb": 3251,
+      "ram_total_mb": 31011,
+      "ram_usage_percent": 10.48337686627326,
+      "cpu_cores": [
+        {
+          "usage": 3,
+          "freq": 1728
+        },
+        {
+          "usage": 2,
+          "freq": 1728
+        },
+        {
+          "usage": 12,
+          "freq": 1728
+        },
+        {
+          "usage": 9,
+          "freq": 1728
+        },
+        {
+          "usage": 3,
+          "freq": 1728
+        },
+        {
+          "usage": 4,
+          "freq": 1728
+        },
+        {
+          "usage": 28,
+          "freq": 1728
+        },
+        {
+          "usage": 0,
+          "freq": 1728
+        }
+      ],
+      "cpu_avg_usage": 7.625,
+      "cpu_avg_freq": 1728.0,
+      "gpu_usage": 0,
+      "cpu_temp": 49.0,
+      "gpu_temp": 49.0
+    }
+  ]
+}

@@ -155,7 +155,7 @@ local_costmap:
       width: 4  # Reduced size for better performance
       height: 4  # Reduced size for better performance
       resolution: 0.1  # Increased resolution value to reduce computation
-      footprint: "[[-0.22, -0.15], [0.22, -0.15], [0.22, 0.15], [-0.22, 0.15]]"
+      footprint: "[[-0.2225, -0.141], [0.2225, -0.141], [0.2225, 0.141], [-0.2225, 0.141]]"
       plugins: ["obstacle_layer", "inflation_layer"]  # Using ObstacleLayer for better performance
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
@@ -192,7 +192,7 @@ global_costmap:
       global_frame: map
       robot_base_frame: base_link
       use_sim_time: False
-      footprint: "[[-0.22, -0.15], [0.22, -0.15], [0.22, 0.15], [-0.22, 0.15]]"
+      footprint: "[[-0.2225, -0.141], [0.2225, -0.141], [0.2225, 0.141], [-0.2225, 0.141]]"
       resolution: 0.1  # Increased resolution value to reduce computation
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
