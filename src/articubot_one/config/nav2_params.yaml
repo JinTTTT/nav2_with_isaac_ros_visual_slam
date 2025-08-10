@@ -110,7 +110,7 @@ controller_server:
     # Regulated Pure Pursuit parameters - INCREASED SPEEDS
     FollowPath:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      desired_linear_vel: 0.5  # Increased from 1.0 to 0.5 for testing
+      desired_linear_vel: 0.3  # Increased from 1.0 to 0.5 for testing
       max_linear_accel: 2.0
       max_linear_decel: 2.0
       lookahead_dist: 1.2

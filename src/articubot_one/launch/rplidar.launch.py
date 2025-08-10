@@ -15,7 +15,8 @@ def generate_launch_description():
                 'serial_baudrate': 256000,
                 'frame_id': 'laser_frame',
                 'angle_compensate': True,
-                'scan_mode': 'Sensitivity'
+                'scan_mode': 'Standard',  # 从Sensitivity改为Standard，降低频率
+                'scan_frequency': 8.0     # 明确设置8Hz而不是默认10Hz
             }]
         )
     ])
