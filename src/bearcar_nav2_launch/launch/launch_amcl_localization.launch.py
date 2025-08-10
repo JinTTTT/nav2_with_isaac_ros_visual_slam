@@ -54,7 +54,7 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             'map',
-            default_value='/home/jetsonagx/nav2_ws/lab_scan.yaml',
+            default_value='/home/jetsonagx/nav2_ws/src/map/lab_scan.yaml',
             description='Full path to map yaml file to load'),
 
         DeclareLaunchArgument(
@@ -102,7 +102,7 @@ def generate_launch_description():
                 ExecuteProcess(
                     cmd=['ros2', 'service', 'call', '/map_server/load_map', 
                          'nav2_msgs/srv/LoadMap', 
-                         '{map_url: /home/jetsonagx/nav2_ws/lab_scan.yaml}'],
+                         '{map_url: /home/jetsonagx/nav2_ws/src/map/lab_scan.yaml}'],
                     output='screen')
             ])
     ])
