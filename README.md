@@ -1,17 +1,43 @@
-# ROS2 Navigation Robot Project
+# Nav2 BearCar with RealSense D455
+This project implements complete autonomous navigation capabilities on BearCar platform using Nav2 navigation stack with dual sensor support for mapping, localization, and navigation applications.
 
-A complete 2D LiDAR mapping, Isaac Vslam localization, and navigation system based on ROS2 Nav2.
+## Platform Requirements
+
+- **Hardware**: BearCar platform on NVIDIA Jetson Xavier AGX
+- **JetPack**: 5.1
+- **Host ROS Distribution**: ROS2 Foxy
+- **Container ROS Distribution**: ROS2 Humble (for Isaac ROS Visual SLAM)
+- **Isaac ROS**: 2.1 (see [Isaac ROS Visual SLAM workspace](https://git.tu-berlin.de/tj965737461/remote_control_ws))
+
+## Purpose
+This workspace provides complete autonomous navigation functionality combining:
+
+- **Mapping**: 2D LiDAR-based SLAM using SLAM Toolbox
+- **Localization**: Dual-mode support for LiDAR-only or LiDAR + Visual SLAM
+- **Navigation**: Nav2 navigation stack with obstacle avoidance
+- **Control**: Priority-based manual override system
+
+## Environment
+The project operates in dual environments:
+
+- **Host Environment**: ROS2 Foxy for main navigation stack
+- **Isaac Container**: ROS2 Humble for Visual SLAM (when using RealSense)
 
 ## Hardware Components
 
 - **LiDAR**: RPLidar (2D laser scanning)
-- **Robot Platform**: VESC motor controller
-- **Odometry**: Visual slam, topic name: _/visual_slam/tracking/odometry_
-- **Navigation**: Nav2
+- **Camera**: RealSense D455 (optional, for visual odometry)
+- **Robot Platform**: BearCar with VESC motor controller
+- **Control**: Remote controller with priority-based switching
 
 ## Control Logic
 
-The system supports dual control modes with automatic priority switching between autonomous navigation and manual remote control:
+The system uses VESC motor controller as the primary drive unit, equivalent to ros2_control in standard Nav2 setups. The architecture supports simultaneous operation of autonomous navigation and manual control through priority-based switching.
+
+### Key Features
+- **Dual Control**: Nav2 autonomous navigation and manual joystick control operate simultaneously
+- **Priority Override**: Joystick control has higher priority through twist_mux, allowing operator takeover at any time
+- **Seamless Switching**: Automatic return to Nav2 control when joystick becomes idle
 
 ### Data Flow Architecture
 ```
@@ -40,19 +66,29 @@ Remote Controller → /vehicle/rc_cmd_vel ────────────�
    - **Behavior**: Remote control overrides Nav2 when active; switches back to Nav2 when joystick idle
 
 4. **VESC Interface**: Hardware command conversion
+   - Replaces standard ros2_control hardware interface
    - Converts unified cmd_vel to VESC motor commands
    - Speed: m/s → ERPM conversion
    - Steering: rad → servo position (0.0-1.0)
 
-### Control Modes
+## Installation
 
-- **Autonomous Mode**: Nav2 provides navigation commands, robot follows planned paths
-- **Manual Override**: Joystick input immediately takes control, Nav2 commands ignored
-- **Automatic Recovery**: System returns to Nav2 control 0.5s after joystick becomes idle
+Install required ROS2 Foxy packages:
 
-## Quick Start
+```bash
+sudo apt update
+sudo apt install -y \
+  ros-foxy-nav2-bringup \
+  ros-foxy-slam-toolbox \
+```
 
-### 1. Launch Robot Base System
+For visual odometry functionality, set up Isaac ROS Visual SLAM in the Isaac container. See the [Isaac ROS Visual SLAM workspace](https://git.tu-berlin.de/tj965737461/remote_control_ws) for detailed setup instructions.
+
+## Usage
+
+### Basic Launch Sequence
+
+#### 1. Launch Robot Base System
 ```bash
 ros2 launch bearcar_nav2_launch launch_robot.launch.py
 ```
@@ -117,6 +153,8 @@ Uses standard format map with AMCL algorithm.
 ros2 launch bearcar_nav2_launch launch_amcl_localization.launch.py
 ```
 
+**⚠️ Warning**: AMCL has integration issues with Nav2 in this setup. While AMCL works fine as a standalone localization solution, it may cause problems when combined with Nav2 navigation. Use SLAM Toolbox localization for reliable Nav2 integration.
+
 ### 4. Launch Navigation
 Starts Nav2 navigation stack.
 ```bash
@@ -129,25 +167,27 @@ ros2 launch bearcar_nav2_launch navigation_launch.py
 - Click on the map to set destination
 - Robot will automatically navigate to the target
 
+### Performance Monitoring
+
+Monitor Jetson system performance during navigation:
+```bash
+python3 jetson_monitor.py
+```
+
+Optional parameters:
+```bash
+# Monitor for 60 seconds with 2-second intervals
+python3 jetson_monitor.py -t 60 -i 2.0 -o performance_data.json
+```
+
+This script monitors CPU, GPU, memory usage and temperature, providing real-time performance statistics and saving data for analysis.
+
 ## Navigation Features
 
 - **Autonomous Navigation**: Robot navigates to goals avoiding obstacles
 - **Path Planning**: Uses SmacPlanner for global path planning  
 - **Obstacle Avoidance**: Real-time local costmap and dynamic re-planning
 - **Motor Control**: Direct integration with VESC motor controller via cmd_vel
-
-## Project Structure
-
-```
-src/
-├── bearcar_nav2_launch/           # Main robot package
-│   ├── launch/             # Launch files
-│   ├── config/             # Configuration parameters
-│   └── description/        # Robot URDF description
-├── remote_control/         # VESC motor control interface
-├── rf2o_laser_odometry/    # Laser odometry
-└── rplidar_ros/           # RPLidar driver
-```
 
 ## Key Configuration Files
 
@@ -161,9 +201,3 @@ src/
 1. **Mapping Phase**: Robot moves around while SLAM Toolbox builds environment map
 2. **Localization Phase**: Uses pre-built map to determine robot position via particle filter (AMCL) or graph optimization (SLAM Toolbox)
 3. **Navigation Phase**: Nav2 plans paths and executes autonomous navigation based on map and current position
-
-## Notes
-
-- Ensure LiDAR is properly connected and configured
-- Drive robot around sufficiently during mapping for complete coverage
-- Set initial pose estimate in RViz before navigation * _only for amcl localization *
