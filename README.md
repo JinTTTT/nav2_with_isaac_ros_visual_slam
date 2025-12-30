@@ -7,7 +7,7 @@ This project implements complete autonomous navigation capabilities on BearCar p
 - **JetPack**: 5.1
 - **Host ROS Distribution**: ROS2 Foxy
 - **Container ROS Distribution**: ROS2 Humble (for Isaac ROS Visual SLAM)
-- **Isaac ROS**: 2.1 (see [Isaac ROS Visual SLAM workspace](https://git.tu-berlin.de/tj965737461/remote_control_ws))
+- **Isaac ROS**: 2.1 (see [Isaac ROS Visual SLAM workspace](https://github.com/JinTTTT/issac_ros_visual_slam_d455))
 
 ## Purpose
 This workspace provides complete autonomous navigation functionality combining:
